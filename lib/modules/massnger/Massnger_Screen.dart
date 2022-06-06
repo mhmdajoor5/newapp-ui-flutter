@@ -104,8 +104,7 @@ class MassngeScreen extends StatelessWidget {
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) => buildStoryItem() ,
-                      separatorBuilder: (context , index) => SizedBox(
-                        width: 5.5,
+                      separatorBuilder: (context , index) => SizedBox(width: 5.5,
                       ),
                       itemCount: 20,
                   ),

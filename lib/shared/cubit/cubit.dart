@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
-import 'package:udemy_flutter/modules/archived_Screen/archived_new.dart';
-import 'package:udemy_flutter/modules/done_Screen/done_new.dart';
-import 'package:udemy_flutter/modules/take_Screen/newTask.dart';
-import 'package:udemy_flutter/modules/task_screen/task_screen.dart';
-import 'package:udemy_flutter/shared/cubit/states.dart';
+import 'package:udemy_flutter/shared/network/local/shared_preferences.dart';
+import '../../../shared/cubit/states.dart';
+import '../../modules/todoapp/archived_Screen/archived_new.dart';
+import '../../modules/todoapp/done_Screen/done_new.dart';
+import '../../modules/todoapp/task_screen/task_screen.dart';
+
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super (AppInitialStates());
@@ -159,5 +160,24 @@ class AppCubit extends Cubit<AppStates> {
 
     emit(AppChangeBottomSheetShown());
   }
+
+  bool isDark = false;
+
+  void changeAppMode({bool? formShared}){
+
+   if(formShared != null) {
+     isDark = formShared;
+     emit(NewChangeAppModeState());
+   }
+   else{
+     isDark = !isDark;
+
+     CacheHelper.putData(key: 'isDark' , value: isDark).then((value) {
+       emit(NewChangeAppModeState());
+     });
+   }
+
+  }
+
 
 }

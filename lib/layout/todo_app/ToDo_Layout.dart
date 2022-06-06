@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:udemy_flutter/modules/archived_Screen/archived_new.dart';
-import 'package:udemy_flutter/modules/done_Screen/done_new.dart';
 import 'package:udemy_flutter/shared/components/components.dart';
-import 'package:udemy_flutter/shared/cubit/cubit.dart';
-import 'package:udemy_flutter/shared/cubit/states.dart';
-import '../modules/take_Screen/newTask.dart';
-import '../shared/components/constants.dart';
+
+import '../../modules/take_Screen/newTask.dart';
+import '../../shared/components/constants.dart';
+import '../../shared/cubit/cubit.dart';
+import '../../shared/cubit/states.dart';
 
 class HomeLayout extends StatelessWidget
 {
@@ -65,9 +64,7 @@ class HomeLayout extends StatelessWidget
 
                     }
                   }else{
-                    // setState(() {
-                    //   fdIcon = Icons.add;
-                    // });
+
                     scaffoldKey.currentState?.showBottomSheet(
                           (context) => Container(
                         color: Colors.black26,
@@ -76,7 +73,7 @@ class HomeLayout extends StatelessWidget
                           key: formKey,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
-                            children: [
+                            children:  [
                               defultFormFalid(
                                 onTap: (){
 
@@ -138,7 +135,6 @@ class HomeLayout extends StatelessWidget
                               ),
                               InkWell(
                                 onTap: (){
-
                                   showDatePicker(
                                     context: context,
                                     initialDate: DateTime.now(),
@@ -147,18 +143,15 @@ class HomeLayout extends StatelessWidget
                                   ).then((value) {
                                     dateController.text = DateFormat.yMMMd().format(value!);
                                   });
-
                                 },
                                 child: IgnorePointer(
                                   child: defultFormFalid(
-
                                     Controller:  dateController,
-                                    TextInputType: TextInputType.datetime,
+                                    TextInputType: TextInputType.phone,
                                     labelText: 'date Text',
                                     validata: (value){
                                       if(value.isEmpty){
                                         return 'Please enter the Data';
-
                                       }
                                     },
                                     Prefix: Icons.calendar_today_outlined,
@@ -220,16 +213,9 @@ class HomeLayout extends StatelessWidget
       ),
     );
   }
-
   Future<String> getName() async {
     return 'Todo App';
   }
 
 
 }
-
-
-
-
-
-

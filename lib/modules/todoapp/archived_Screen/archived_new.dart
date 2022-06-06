@@ -1,19 +1,24 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:udemy_flutter/shared/components/components.dart';
-import '../../shared/cubit/cubit.dart';
-import '../../shared/cubit/states.dart';
 
-class doneSccreen extends StatelessWidget {
-  const doneSccreen({Key? key}) : super(key: key);
+
+import '../../../shared/components/components.dart';
+import '../../../shared/cubit/cubit.dart';
+import '../../../shared/cubit/states.dart';
+
+
+
+
+class NewArchived extends StatelessWidget {
+  const NewArchived({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit , AppStates>(
       listener: (context , index){},
       builder: (context , index){
-        var test = AppCubit.get(context).doneTest;
+        var test = AppCubit.get(context).NewAArchived;
         return ConditionalBuilder(
           condition: test.length > 0 ,
           builder: (context) => ListView.separated(
