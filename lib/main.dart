@@ -23,56 +23,46 @@ import 'layout/news_app/news_layout.dart';
 import 'modules/conter/Conter_Secrren.dart';
 import 'modules/login/Login_new.dart';
 
-void main() async{
-
-  BlocOverrides.runZoned(
-        () {
-
-
-    },
-    blocObserver: MyBlocObserver(),
-
-
-  );
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   await CacheHelper.init();
-
-   bool? isDark = CacheHelper.getData(key:'isDark');
-
-  runApp(MyApp(true));
+  BlocOverrides.runZoned(
+    () {
+      bool isDark = CacheHelper.getData(key: 'isDark') ?? false;
+      print('isDark=$isDark');
+      runApp(MyApp(isDark));
+    },
+    blocObserver: MyBlocObserver(),
+  );
 }
 // stateless
 // stateful
 
 //class MyApp
 
-class MyApp extends StatelessWidget
-{
-
+class MyApp extends StatelessWidget {
   final bool isDark;
 
-  MyApp(this.isDark);
-
+  const MyApp(this.isDark, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => AppCubit()..changeAppMode(
-        formShared: isDark,
-      ),
-      child: BlocConsumer<AppCubit , AppStates>(
-        listener: (context , state) {},
-        builder: (context , state){
-
-
-          return  MaterialApp(
+      create: (BuildContext context) => AppCubit()
+        ..changeAppMode(
+          formShared: isDark,
+        ),
+      child: BlocConsumer<AppCubit, AppStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               primarySwatch: Colors.deepOrange,
               floatingActionButtonTheme: const FloatingActionButtonThemeData(
-                  backgroundColor: Colors.deepOrange
-              ),
-              scaffoldBackgroundColor: Colors.white ,
+                  backgroundColor: Colors.deepOrange),
+              scaffoldBackgroundColor: Colors.white,
               appBarTheme: const AppBarTheme(
                 backgroundColor: Colors.white,
                 elevation: 0.0,
@@ -88,7 +78,6 @@ class MyApp extends StatelessWidget
                 actionsIconTheme: IconThemeData(
                   color: Colors.black,
                 ),
-
               ),
               bottomNavigationBarTheme: const BottomNavigationBarThemeData(
                 type: BottomNavigationBarType.fixed,
@@ -121,7 +110,7 @@ class MyApp extends StatelessWidget
                   color: Colors.white,
                 ),
               ),
-              bottomNavigationBarTheme:  BottomNavigationBarThemeData(
+              bottomNavigationBarTheme: BottomNavigationBarThemeData(
                 type: BottomNavigationBarType.fixed,
                 selectedItemColor: Colors.deepOrange,
                 unselectedItemColor: Colors.grey,
@@ -136,23 +125,18 @@ class MyApp extends StatelessWidget
                 ),
               ),
             ),
-            themeMode: AppCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
-            home :  NewApp(),
+            themeMode:
+                AppCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
+            home: NewApp(),
           );
         },
       ),
     );
-
   }
-
 }
-
 
 // floatingActionButton
 // child : Icon(Icons.add)
 
 // Icon 3ady
 //icon : Icon(Icons.Done)
-
-
-

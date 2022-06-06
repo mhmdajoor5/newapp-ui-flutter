@@ -163,19 +163,13 @@ class AppCubit extends Cubit<AppStates> {
 
   bool isDark = false;
 
-  void changeAppMode({bool? formShared}){
-
-   if(formShared != null) {
-     isDark = formShared;
-     emit(NewChangeAppModeState());
-   }
-   else{
-     isDark = !isDark;
-
-     CacheHelper.putData(key: 'isDark' , value: isDark).then((value) {
+  Future<void> changeAppMode({bool? formShared})async{
+     isDark = formShared ?? !isDark;
+     await CacheHelper.putData(key: 'isDark' , value: isDark).then((value) {
+     print('result = $value');
        emit(NewChangeAppModeState());
+       print('saved value = ${CacheHelper.getData(key: 'isDark')}');
      });
-   }
 
   }
 
