@@ -2,14 +2,15 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udemy_flutter/layout/news_app/cubit/states.dart';
-import '../../../modules/newapp/business/business_screen.dart';
-import '../../../modules/newapp/sciences/sciences_screen.dart';
-import '../../../modules/newapp/settings/settings.dart';
-import '../../../modules/newapp/sport/sport_screen.dart';
+import 'package:udemy_flutter/modules/new_app/business/business_screen.dart';
+import 'package:udemy_flutter/modules/new_app/sciences/sciences_screen.dart';
+import 'package:udemy_flutter/modules/new_app/sport/sport_screen.dart';
+import '../../../modules/shop_app/settings/settings.dart';
 import '../../../shared/network/remote/dio_helper.dart';
 
 class NewCubit extends Cubit<NewsStates>
 {
+
   NewCubit() : super (NewInitialStates());
 
   static NewCubit get(context) => BlocProvider.of(context);
@@ -42,7 +43,6 @@ class NewCubit extends Cubit<NewsStates>
     BusinessScreen(),
     SciencesScreen(),
     SportScreen(),
-    SettingsScreen(),
   ];
 
 
@@ -63,13 +63,13 @@ class NewCubit extends Cubit<NewsStates>
         url: 'v2/top-headlines',
         query:
         {
-          'country':'us',
+          'country':'eg',
             'category':'business',
             'apiKey':'3a470a8326ca47bb8a8fddb794ef047f',
     },
     ).then((value) {
       business = value.data['articles'];
-      print(business[0]['title']);
+      // print(business[0]['title']);
       emit(NewGetBusinessSuccessState());
     }).catchError((error){
       print(error.toString());
@@ -87,13 +87,13 @@ class NewCubit extends Cubit<NewsStates>
         url: 'v2/top-headlines',
         query:
         {
-          'country':'us',
+          'country':'eg',
           'category':'science',
           'apiKey':'3a470a8326ca47bb8a8fddb794ef047f',
         },
       ).then((value) {
         sciences = value.data['articles'];
-        print(sciences[0]['title']);
+       // print(sciences[0]['title']);
         emit(NewGetSciencesSuccessState());
       }).catchError((error){
         print(error.toString());
@@ -116,13 +116,13 @@ class NewCubit extends Cubit<NewsStates>
          url: 'v2/top-headlines',
          query:
          {
-           'country':'us',
+           'country':'eg',
            'category':'sports',
            'apiKey':'3a470a8326ca47bb8a8fddb794ef047f',
          },
        ).then((value) {
          sport = value.data['articles'];
-         print(sport[0]['title']);
+        // print(sport[0]['title']);
 
          emit(NewGetSportSuccessState());
        }).catchError((error){
@@ -132,6 +132,29 @@ class NewCubit extends Cubit<NewsStates>
      }else {
        emit(NewGetSportSuccessState());
      }
+
+  }
+  List <dynamic> search = [];
+
+  void getSearch (String value){
+    emit(NewGetSearchLoadingState());
+
+    DioHelper.getData(
+      url: 'v2/everything',
+      query:
+      {
+        'q':'$value',
+        'apiKey':'3a470a8326ca47bb8a8fddb794ef047f',
+      },
+    ).then((value) {
+      search = value.data['articles'];
+      print(search[0]['title']);
+
+      emit(NewGetSearchSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(NewGetSearchErrorState(error.toString()));
+    });
 
   }
 

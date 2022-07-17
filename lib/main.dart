@@ -1,65 +1,77 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:udemy_flutter/layout/news_app/cubit/cubit.dart';
 import 'package:udemy_flutter/layout/news_app/cubit/states.dart';
+import 'package:udemy_flutter/layout/shop_app/cubit/cubit.dart';
+import 'package:udemy_flutter/layout/shop_app/shop_layout.dart';
 import 'package:udemy_flutter/layout/todo_app/ToDo_Layout.dart';
-import 'package:udemy_flutter/modules/bim/Bim_Screen.dart';
-import 'package:udemy_flutter/modules/bim_result/Bim_carcorater.dart';
-import 'package:udemy_flutter/modules/home/Home_Secreen.dart';
-import 'package:udemy_flutter/modules/login/Login_Screen.dart';
-import 'package:udemy_flutter/modules/massnger/Massnger_Screen.dart';
-import 'package:udemy_flutter/modules/user/User_Screen.dart';
+import 'package:udemy_flutter/modules/shop_app/login/shop_login_screen.dart';
+import 'package:udemy_flutter/modules/shop_app/on_boarding/on_boarding.dart';
+import 'package:udemy_flutter/modules/social_app/social_login/social_login.dart';
 import 'package:udemy_flutter/shared/bloc_observer.dart';
 import 'package:udemy_flutter/shared/cubit/cubit.dart';
 import 'package:udemy_flutter/shared/cubit/states.dart';
+import 'package:udemy_flutter/shared/network/end_points.dart';
 import 'package:udemy_flutter/shared/network/local/shared_preferences.dart';
 import 'package:udemy_flutter/shared/network/remote/dio_helper.dart';
+import 'package:udemy_flutter/shared/styles/Themes.dart';
 import 'layout/news_app/news_layout.dart';
-import 'modules/conter/Conter_Secrren.dart';
-import 'modules/login/Login_new.dart';
 
-void main() async{
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-  BlocOverrides.runZoned(
-        () {
+  await Firebase.initializeApp();
 
-
-    },
-    blocObserver: MyBlocObserver(),
-
-
-  );
   DioHelper.init();
   await CacheHelper.init();
+  bool? isDark =CacheHelper.getData(key: 'isDark');
 
-   bool? isDark = CacheHelper.getData(key:'isDark');
+  Widget widget;
 
-  runApp(MyApp(true));
+  bool? onBoarding = CacheHelper.getData(key: 'onBoarding');
+
+  token = CacheHelper.getData(key: 'token');
+
+  if(OnBoardingScreen() != null){
+    if(token != null ) widget = ShopLayout();
+    else widget = LoginScreenShop();
+  }else {
+   widget = OnBoardingScreen();
+  }
+
+  BlocOverrides.runZoned(() {
+    runApp(MyApp(
+      isDark: isDark,
+      startWidget: widget ,
+    ));
+  },
+    blocObserver: MyBlocObserver(),
+  );
 }
-// stateless
-// stateful
+class MyApp extends StatelessWidget {
+  final bool? isDark;
+  final Widget? startWidget;
 
-//class MyApp
-
-class MyApp extends StatelessWidget
-{
-
-  final bool isDark;
-
-  MyApp(this.isDark);
+  MyApp({this.isDark, this.startWidget});
 
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => AppCubit()..changeAppMode(
-        formShared: isDark,
-      ),
+    return MultiBlocProvider(
+
+      providers: [
+        BlocProvider(create: (create)=> NewCubit()..getBusiness()..getSciences()..getSport()),
+        BlocProvider(create: (BuildContext context) => AppCubit()..changeAppMode(
+          formShared: isDark,
+        ),),
+        BlocProvider(create: (BuildContext context) => ShopCubit()..getHomeModel()..getCategories()..getFavorites()..getUserData(), ),
+      ],
       child: BlocConsumer<AppCubit , AppStates>(
         listener: (context , state) {},
         builder: (context , state){
@@ -67,77 +79,10 @@ class MyApp extends StatelessWidget
 
           return  MaterialApp(
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primarySwatch: Colors.deepOrange,
-              floatingActionButtonTheme: const FloatingActionButtonThemeData(
-                  backgroundColor: Colors.deepOrange
-              ),
-              scaffoldBackgroundColor: Colors.white ,
-              appBarTheme: const AppBarTheme(
-                backgroundColor: Colors.white,
-                elevation: 0.0,
-                titleTextStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarColor: Colors.white,
-                  statusBarIconBrightness: Brightness.dark,
-                ),
-                actionsIconTheme: IconThemeData(
-                  color: Colors.black,
-                ),
-
-              ),
-              bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-                type: BottomNavigationBarType.fixed,
-                selectedItemColor: Colors.deepOrange,
-                elevation: 100.0,
-              ),
-              textTheme: TextTheme(
-                bodyText1: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            darkTheme: ThemeData(
-              primarySwatch: Colors.deepOrange,
-              scaffoldBackgroundColor: HexColor('333739'),
-              appBarTheme: AppBarTheme(
-                backgroundColor: HexColor('333739'),
-                elevation: 0.0,
-                titleTextStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarColor: HexColor('333739'),
-                  statusBarIconBrightness: Brightness.light,
-                ),
-                actionsIconTheme: IconThemeData(
-                  color: Colors.white,
-                ),
-              ),
-              bottomNavigationBarTheme:  BottomNavigationBarThemeData(
-                type: BottomNavigationBarType.fixed,
-                selectedItemColor: Colors.deepOrange,
-                unselectedItemColor: Colors.grey,
-                elevation: 100.0,
-                backgroundColor: HexColor('333739'),
-              ),
-              textTheme: TextTheme(
-                bodyText1: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            theme: lightTheme,
+            darkTheme: darkTheme,
             themeMode: AppCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
-            home :  NewApp(),
+            home : startWidget,
           );
         },
       ),
@@ -146,6 +91,54 @@ class MyApp extends StatelessWidget
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // floatingActionButton

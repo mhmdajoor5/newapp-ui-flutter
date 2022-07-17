@@ -13,8 +13,6 @@ class NewGetBusinessErrorState extends NewsStates{
   NewGetBusinessErrorState(this.error);
 }
 
-class NewGetSciencesLoadingState extends NewsStates{}
-
 class NewGetSciencesSuccessState extends NewsStates{}
 
 class NewGetSciencesErrorState extends NewsStates{
@@ -24,6 +22,8 @@ class NewGetSciencesErrorState extends NewsStates{
 
 }
 
+class NewGetSciencesLoadingState extends NewsStates{}
+
 class NewGetSportLoadingState extends NewsStates{}
 
 class NewGetSportSuccessState extends NewsStates{}
@@ -31,6 +31,19 @@ class NewGetSportSuccessState extends NewsStates{}
 class NewGetSportErrorState extends NewsStates{
   final String error;
   NewGetSportErrorState(this.error);
+
+
+
+}
+
+
+class NewGetSearchLoadingState extends NewsStates{}
+
+class NewGetSearchSuccessState extends NewsStates{}
+
+class NewGetSearchErrorState extends NewsStates{
+  final String error;
+  NewGetSearchErrorState(this.error);
 
 
 

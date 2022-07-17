@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:udemy_flutter/shared/components/components.dart';
 
-import '../../modules/take_Screen/newTask.dart';
 import '../../shared/components/constants.dart';
 import '../../shared/cubit/cubit.dart';
 import '../../shared/cubit/states.dart';
@@ -53,7 +52,6 @@ class HomeLayout extends StatelessWidget
             )  ,
             floatingActionButton: FloatingActionButton(
                 onPressed: (){
-
                   if(cubit.isBottomSheet) {
                     if(formKey.currentState!.validate()){
                       cubit.insertToDatabase(
@@ -74,7 +72,7 @@ class HomeLayout extends StatelessWidget
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children:  [
-                              defultFormFalid(
+                              defaultFormValid(
                                 onTap: (){
 
                                 },
@@ -104,7 +102,7 @@ class HomeLayout extends StatelessWidget
 
                                 },
                                 child: IgnorePointer(
-                                  child: defultFormFalid(
+                                  child: defaultFormValid(
                                     Controller: timeController ,
                                     TextInputType: TextInputType.datetime,
                                     labelText: 'time Text',
@@ -145,7 +143,7 @@ class HomeLayout extends StatelessWidget
                                   });
                                 },
                                 child: IgnorePointer(
-                                  child: defultFormFalid(
+                                  child: defaultFormValid(
                                     Controller:  dateController,
                                     TextInputType: TextInputType.phone,
                                     labelText: 'date Text',
@@ -174,7 +172,6 @@ class HomeLayout extends StatelessWidget
                         isShow: true,
                         icon: Icons.add
                     );
-
                   }
                 },
                 child: Icon(
@@ -186,7 +183,6 @@ class HomeLayout extends StatelessWidget
                 currentIndex: AppCubit.get(context).currentIndex,
                 onTap: (index){
                   cubit.changeIndex(index);
-
                 },
                 items: const  [
                   BottomNavigationBarItem(
